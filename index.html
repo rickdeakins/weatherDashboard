@@ -1,39 +1,39 @@
-<!DOCTYPE html>
 <html>
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>weatherDashboard</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='./assets/style.css'>
-<body>
-<div class ="container">
-    <div class ="weather-input"></div>
-        <h3>Enter a City Name</h3>
-        <input type ="text" placeholder="City Name Here">
-        <button class ="search-btn">Search</button>
-</div>
-<div class = "weather-data">
-    <div class ="current-weather">
-        <div class ="weather-info">
-            <h3>Today's Weather</h3>
-            <h5>City</h5>
-            <h5>Temperature</h5>
-            <h5>Humidity</h5>
-            <h5>Wind Speed</h5>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>weatherDashboard</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <link rel='stylesheet' type='text/css' media='screen' href='./assets/style.css'>
+    <body>
+    <div class ="container">
+        <div class ="weather-input"></div>
+            <h3>Enter a City Name</h3>
+            <input class="search-form" type ="text" placeholder="City Name Here">
+            <button class ="search-btn">Search</button>
+    </div>
+    <div class = "weather-data">
+        <div class ="current-weather">
+            <div class ="weather-info">
+                <h3>Today's Weather</h3>
+                <h2 id="cityoutput">City</h2>
+                <h5 id="tempoutput">Temperature</h5>
+                <h5 id="humidoutput">Humidity</h5>
+                <h5 id="windoutput">Wind Speed</h5>
+            </div>
+            
+        
+            <div class ="weather-icon">
+            <img src = "https://cdn.icon-icons.com/icons2/2211/PNG/512/weather_rain_rainy_heavy_cloud_icon_134150.png" alt="weather-icon">
         </div>
-    <div class ="weather-icon">
-        <img src = "https://cdn.icon-icons.com/icons2/2211/PNG/512/weather_rain_rainy_heavy_cloud_icon_134150.png" alt="weather-icon">
+        </div>
+        <div>
+            <a href="https://api.openweathermap.org/data/2.5/weather">https://api.openweathermap.org/data/2.5/weather</a>
+        </div>
+        <script src='./assets/script.js'></script>
     </div>
+    <div class = "footer">
+        <h6>weatherDashboard 2024</h6>
     </div>
-
-</div>
-<div class = "footer">
-    <h6>weatherDashboard 2024</h6>
-</div>
-    
-    <script src='./assets/script.js'></script>
-</body>
-</html>
-
+    </body>
 </html>
