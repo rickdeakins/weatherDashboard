@@ -4,8 +4,8 @@ var cityName = document.querySelector('.search-form');
 var submitButton = document.querySelector(".search-btn");
 var cityDisplay = document.querySelector('#cityoutput');
 var temp = document.querySelector('#temp');
-var wind = document.querySelector('#wind');
-var humidity = document.querySelector('#humidity');
+//var wind = document.querySelector('#wind');
+//var humidity = document.querySelector('#humidity');
 var APIKEY = "ff7b51604823cd4027c9381ce6af58ce";
 //var cityName = "Cleveland"//document.getElementById("search-form").value;
 var weatherData;
@@ -36,18 +36,25 @@ fetch(weatherUrl)
     var cardTitle = $("<h2>").addClass("card-title").text(currentCity)//add weather parameters to this line starting with .
     //creating Variables to append to dashboard with weather data 10/15
     //var currentTemp = $("<h4>").addClass("card-temp").main.temp  
-    var currentTemp = data[main][temp]
-    var currentHumid = $("<h4>").addClass("card-body").humidity  
-    var currentWind = $("<h4>").addClass("card-body").wind  
+    var currentTemp = data["main"]["temp"]
+    var currentHumidity = data.main.humidity
+    var currentHumid = $("<h4>").addClass("card-body").text(currentHumidity)  
+    var currentWindData = data.wind.speed
+    var currentWind = $("<h4>").addClass("card-body").text(currentWindData)  
 
     //appending variables to dashboard
-    $(".current").append(card.append(cardBody.append(cardTitle)))
+    //$(".current").append(card.append(cardBody.append(cardTitle)))
     //appending weather attributes to dashboard
-    //$(".current").append(card.append(cardBody.append(cardTitle.append(currentTemp))))
+    $(".current").append(card.append(cardBody.append(cardTitle.append(currentTemp))))
+    $(".current").append(card.append(cardBody.append(currentHumid)))
+    $(".current").append(card.append(cardBody.append(currentWind)))
     //$(".current").append(card.append(cardBody.append(cardTitle.append(currentTemp.append(currentHumid.append(currentWind))))))
   })
 
 }
+
+//forecast for 5 days - forecast api response
+
 
 submitButton.addEventListener("click", 
   function(){
