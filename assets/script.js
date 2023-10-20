@@ -26,34 +26,66 @@ fetch(reqGeoUrl)
 
 //Obtaining weather data from OpenWeather API and appending to page
 function getWeather(lat,lon,currentCity){
-var weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKEY}`
+var weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${APIKEY}`
 fetch(weatherUrl)
 .then(response =>response.json())
   .then(data =>{
     console.log(data)
     var card = $("<div>").addClass("card")
     var cardBody = $("<div>").addClass("card-body")
-    var cardTitle = $("<h2>").addClass("card-title").text(currentCity)//add weather parameters to this line starting with .
+    var cardTitle = $("<h2>").addClass("card-title").text(currentCity + ": ")//add weather parameters to this line starting with .
     //creating Variables to append to dashboard with weather data 10/15
     //var currentTemp = $("<h4>").addClass("card-temp").main.temp  
     var currentTemp = data["main"]["temp"]
+    var currentTmpEle = $("<h4>").addClass("card-body").text("Current Temperature: " + currentTemp + "°");
     var currentHumidity = data.main.humidity
-    var currentHumid = $("<h4>").addClass("card-body").text(currentHumidity)  
+    var currentHumidEle = $("<h4>").addClass("card-body").text("Current Humidity: " + currentHumidity + "%")  
     var currentWindData = data.wind.speed
-    var currentWind = $("<h4>").addClass("card-body").text(currentWindData)  
+    var currentWindEle = $("<h4>").addClass("card-body").text("Wind Speed: " + currentWindData + 'mph')  
 
     //appending variables to dashboard
     //$(".current").append(card.append(cardBody.append(cardTitle)))
     //appending weather attributes to dashboard
-    $(".current").append(card.append(cardBody.append(cardTitle.append(currentTemp))))
-    $(".current").append(card.append(cardBody.append(currentHumid)))
-    $(".current").append(card.append(cardBody.append(currentWind)))
+    $(".current").append(card.append(cardBody.append(cardTitle)))
+    $(".current").append(card.append(cardBody.append(currentTmpEle)))  
+    $(".current").append(card.append(cardBody.append(currentHumidEle)))
+    $(".current").append(card.append(cardBody.append(currentWindEle)))
     //$(".current").append(card.append(cardBody.append(cardTitle.append(currentTemp.append(currentHumid.append(currentWind))))))
   })
 
 }
+//10/19/23
+//forecast for 5 days - forecast api response 
+//determine how data is nested and adjust acordingly - repeat 5 times 
 
-//forecast for 5 days - forecast api response
+function getForecast(lat,lon,currentCity){
+  var weatherUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${APIKEY}`
+fetch(weatherUrl)
+  .then(response =>response.json())
+  .then(data =>{
+    console.log(data)
+    var forecastCard = $("<div>").addClass("forecastCard")
+    var forecastCardBody = $("<div>").addClass("card-body2")
+    var forecastCardTitle = $("<h2>").addClass("card-title").text(currentCity + ": ")
+    var forecastTemp = data["main"]["temp"]
+    var forecastTmpEle = $("<h4>").addClass("card-body2").text("Current Temperature: " + forecastTmp + "°");
+    var forecastHumidity = data.main.humidity
+    var forecastHumidEle = $("<h4>").addClass("card-body2").text("Current Humidity: " + forecastHumidity + "%")  
+    var forecastWindData = data.wind.speed
+    var forecastWindEle = $("<h4>").addClass("card-body2").text("Wind Speed: " + forecastWindData + 'mph')
+    $(".forecast").append(forecastCard.append(cardBody.append(cardTitle)))
+    $(".forecast").append(forecastCard.append(cardBody.append(forecastTmpEle)))  
+    $(".forecast").append(forecastCard.append(cardBody.append(forecastHumidEle)))
+    (".forecast").append(forecastCard.append(cardBody.append(forecastWindEle)))  
+  
+  })
+
+
+
+}
+//review api call - for forecast select same hour for each day - data will be nested differently
+//elements to card div - 5 diff elements looped  
+//final call to append to forecast div
 
 
 submitButton.addEventListener("click", 
@@ -62,9 +94,7 @@ submitButton.addEventListener("click",
     console.log(city)
     getGeo(city)
   }
-
 )
-
 
 // //Fetch Weather API 
 // function fetchData(){
