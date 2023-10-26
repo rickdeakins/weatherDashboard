@@ -1,0 +1,51 @@
+p {
+    line-height: 1px;
+  }
+    header {
+    background-color: #e1fdfe;
+    padding: 20px;
+    text-align: center;
+  };
+
+  body {
+    background-color: #abbec6;
+    border-left: 30px;
+    padding-left: 50px;
+    line-height: 1px ;
+    margin-top: 80px; /* Adjust this value based on the height of your header */
+  }
+  
+  .footer {
+    text-align: center;
+    background-color: #e1fdfe;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+
+    .card-body {
+    background-color: azure;
+    /* border: 2px black; */
+}
+
+  .current {
+    text-align: center;
+    border-radius: 2px black;
+    max-width: 51%;
+    border: 3px black;    
+}
+
+  .card {
+    border-radius: 1px;
+    border-style: solid black 3px;
+    padding: 1px; 
+    line-height: 2px;
+}
+ 
+    .forecast {
+    margin-left: 125px;
+    text-align: center; 
+}
+

@@ -1,13 +1,9 @@
 //Assigning global variables
 var cityName = document.querySelector('.search-form');
-//var button = document.querySelector('#add');
 var submitButton = document.querySelector(".search-btn");
 var cityDisplay = document.querySelector('#cityoutput');
 var temp = document.querySelector('#temp');
-//var wind = document.querySelector('#wind');
-//var humidity = document.querySelector('#humidity');
 var APIKEY = "ff7b51604823cd4027c9381ce6af58ce";
-//var cityName = "Cleveland"//document.getElementById("search-form").value;
 var weatherData;
 
 //Obtaining Geocoding data based on City entered into search
@@ -21,6 +17,7 @@ fetch(reqGeoUrl)
     var lon = data[0].lon
     var currentCity = data[0].name 
   getWeather(lat,lon,currentCity)
+  getForecast(lat,lon,currentCity)
   })
 }
 
@@ -33,16 +30,15 @@ fetch(weatherUrl)
     console.log(data)
     var card = $("<div>").addClass("card")
     var cardBody = $("<div>").addClass("card-body")
-    var cardTitle = $("<h2>").addClass("card-title").text(currentCity + ": ")//add weather parameters to this line starting with .
-    //creating Variables to append to dashboard with weather data 10/15
-    //var currentTemp = $("<h4>").addClass("card-temp").main.temp  
-    var currentTemp = data["main"]["temp"]
-    var currentTmpEle = $("<h4>").addClass("card-body").text("Current Temperature: " + currentTemp + "°");
+    var cardTitle = $("<h4>").addClass("card-title").text(currentCity + ": ")//add weather parameters to this line starting with .
+    var currentTemp = data.main.temp
+    var currentTmpEle = $("<h6>").addClass("card-body").text("Current Temperature: " + currentTemp + "°");
     var currentHumidity = data.main.humidity
-    var currentHumidEle = $("<h4>").addClass("card-body").text("Current Humidity: " + currentHumidity + "%")  
+    var currentHumidEle = $("<h6>").addClass("card-body").text("Current Humidity: " + currentHumidity + "%")  
     var currentWindData = data.wind.speed
-    var currentWindEle = $("<h4>").addClass("card-body").text("Wind Speed: " + currentWindData + 'mph')  
-
+    var currentWindEle = $("<h6 >").addClass("card-body").text("Wind Speed: " + currentWindData + 'mph')  
+    var weatherIconClass = "wi wi-owm-" + data.weather[0].id
+    var weatherIconEle = $("<i>").addClass(weatherIconClass);
     //appending variables to dashboard
     //$(".current").append(card.append(cardBody.append(cardTitle)))
     //appending weather attributes to dashboard
@@ -50,119 +46,63 @@ fetch(weatherUrl)
     $(".current").append(card.append(cardBody.append(currentTmpEle)))  
     $(".current").append(card.append(cardBody.append(currentHumidEle)))
     $(".current").append(card.append(cardBody.append(currentWindEle)))
+    $(".current").append(card.append(cardBody.append(weatherIconEle)))
+
     //$(".current").append(card.append(cardBody.append(cardTitle.append(currentTemp.append(currentHumid.append(currentWind))))))
   })
-
 }
-//10/19/23
-//forecast for 5 days - forecast api response 
-//determine how data is nested and adjust acordingly - repeat 5 times 
 
-function getForecast(lat,lon,currentCity){
-  var weatherUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${APIKEY}`
-fetch(weatherUrl)
-  .then(response =>response.json())
-  .then(data =>{
-    console.log(data)
-    var forecastCard = $("<div>").addClass("forecastCard")
-    var forecastCardBody = $("<div>").addClass("card-body2")
-    var forecastCardTitle = $("<h2>").addClass("card-title").text(currentCity + ": ")
-    var forecastTemp = data["main"]["temp"]
-    var forecastTmpEle = $("<h4>").addClass("card-body2").text("Current Temperature: " + forecastTmp + "°");
-    var forecastHumidity = data.main.humidity
-    var forecastHumidEle = $("<h4>").addClass("card-body2").text("Current Humidity: " + forecastHumidity + "%")  
-    var forecastWindData = data.wind.speed
-    var forecastWindEle = $("<h4>").addClass("card-body2").text("Wind Speed: " + forecastWindData + 'mph')
-    $(".forecast").append(forecastCard.append(cardBody.append(cardTitle)))
-    $(".forecast").append(forecastCard.append(cardBody.append(forecastTmpEle)))  
-    $(".forecast").append(forecastCard.append(cardBody.append(forecastHumidEle)))
-    (".forecast").append(forecastCard.append(cardBody.append(forecastWindEle)))  
-  
-  })
+function getForecast(lat, lon, currentCity) {
+  var weatherUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${APIKEY}`;
 
+  fetch(weatherUrl)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      $(".forecast").empty(); // Clear previous forecast data
 
+      var uniqueDates = [];
+      for (var i = 2; i < data.list.length; i++) {
+        var forecastDate = new Date(data.list[i].dt * 1000).toLocaleDateString();
+        if (!uniqueDates.includes(forecastDate)) {
+          uniqueDates.push(forecastDate);
 
+          var forecastCard = $("<div>").addClass("card col-md-2");
+          var forecastCardBody = $("<div>").addClass("card-body");
+          var forecastCardTitle = $("<h4>").addClass("card-title").text(currentCity + ": ");
+          var forecastTemp = data.list[i].main.temp;
+          var forecastTmpEle = $("<h6>").addClass("card-body").text("Temperature: " + forecastTemp + "°");
+          var forecastHumidity = data.list[i].main.humidity;
+          var forecastHumidEle = $("<h6>").addClass("card-body").text("Humidity: " + forecastHumidity + "%");
+          var forecastWindData = data.list[i].wind.speed;
+          var forecastWindEle = $("<h6>").addClass("card-body").text("Wind Speed: " + forecastWindData + 'mph');
+          var forecastDateEle = $("<h6>").addClass("date").text("Date: " + forecastDate);
+          var weatherIconClass = "wi wi-owm-" + data.list[i].weather[0].id;
+          var forecastIconEle = $("<i>").addClass(weatherIconClass);
+
+          forecastCard.append(forecastCardBody.append(forecastCardTitle, forecastDateEle, forecastTmpEle, forecastHumidEle, forecastWindEle, forecastIconEle));
+          $(".forecast").append(forecastCard);
+        }
+      }
+    });
 }
-//review api call - for forecast select same hour for each day - data will be nested differently
-//elements to card div - 5 diff elements looped  
-//final call to append to forecast div
 
 
-submitButton.addEventListener("click", 
-  function(){
-    var city= cityName.value
-    console.log(city)
-    getGeo(city)
+submitButton.addEventListener("click", function(event) {
+  var city = cityName.value;
+  console.log(city);
+  getGeo(city);
+  storeUserSearch(event);
+});
+
+
+// local storage - submitButton function
+function storeUserSearch(event) {
+  var userSearch = $(event.target).siblings(".event").val();
+  // Check if the userSearch value is valid
+  if (userSearch) {
+    // Save related form data as an object
+    console.log(userSearch);
+    localStorage.setItem("userSearch", userSearch);
   }
-)
-
-// //Fetch Weather API 
-// function fetchData(){
-//     var fetchUrl = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + "ff7b51604823cd4027c9381ce6af58ce" + "&units=imperial";
-    
-//     fetch(fetchUrl)
-//       .then(function (res){
-//         return res.json()
-//     })
-//     .then(function (data){
-//         console.log(data);
-//         var weatherData = data.list.map(function (forecast) {
-//             return {
-//               date: forecast.dt_txt,  
-//               temp: forecast.main.temp,
-//               humidity: forecast.main.humidity,
-//               speed: forecast.wind.speed,
-//             };
-//           });
-    
-//           console.log(weatherData);
-//         });
-// }
-
-    // //Display the data fetched from the API on the page
-    // var targetElement = document.getElementsByClassName("weatherData");
-    // targetElement.innerHTML = "";
-    // var dateHTML = document.createElement("h4");
-    // dateHTML.textContent = "Date: " + date;
-    // var tempHTML = document.createElement("h4");
-    // tempHTML.textContent = "Temperature: "+ temp;
-    // var humidityHTML = document.createElement("h4");
-    // humidityHTML.textContent = "Humidity: " + humidity;
-    // var speedHTML = document.createElement("h4");
-    // speedHTML.textContent = "Speed: " + speed;
-    // targetElement.appendChild(dateHTML);
-    // targetElement.appendChild(tempHTML);
-    // targetElement.appendChild(humidityHTML);
-    // targetElement.appendChild(speedHTML);
-
-
-//Current Day = 0
-// temperatureElement.innerHTML = "Date: " + weatherData[0].dt_txt;
-// temperatureElement.innerHTML = "Temperature: " + weatherData[0].temp;
-// temperatureElement.innerHTML = "Humidity: " + weatherData[0].humidity;
-// temperatureElement.innerHTML = "Speed: " + weatherData[0].speed;
-// //1 day out = 7
-// temperatureElement.innerHTML = "Date: " + weatherData[7].dt_txt;
-// temperatureElement.innerHTML = "Temperature: " + weatherData[7].temp;
-// temperatureElement.innerHTML = "Humidity: " + weatherData[7].humidity;
-// temperatureElement.innerHTML = "Speed: " + weatherData[7].speed;
-// //2 days out = 15
-// temperatureElement.innerHTML = "Date: " + weatherData[15].dt_txt;
-// temperatureElement.innerHTML = "Temperature: " + weatherData[15].temp;
-// temperatureElement.innerHTML = "Humidity: " + weatherData[15].humidity;
-// temperatureElement.innerHTML = "Speed: " + weatherData[15].speed;
-// //3 days out = 23
-// temperatureElement.innerHTML = "Date: " + weatherData[23].dt_txt;
-// temperatureElement.innerHTML = "Temperature: " + weatherData[23].temp;
-// temperatureElement.innerHTML = "Humidity: " + weatherData[23].humidity;
-// temperatureElement.innerHTML = "Speed: " + weatherData[23].speed;
-// //4 days out = 31
-
-// temperatureElement.innerHTML = "Date: " + weatherData[31].dt_txt;
-// temperatureElement.innerHTML = "Temperature: " + weatherData[31].temp;
-// temperatureElement.innerHTML = "Humidity: " + weatherData[31].humidity;
-// temperatureElement.innerHTML = "Speed: " + weatherData[31].speed;
-
-// Call the fetchData function
-//fetchData();
-
+}
