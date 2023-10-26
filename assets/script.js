@@ -8,7 +8,7 @@ var weatherData;
 
 //Obtaining Geocoding data based on City entered into search
 function getGeo(city){
-  var reqGeoUrl= "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=5&appid=" + APIKEY
+  var reqGeoUrl= "https://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=5&appid=" + APIKEY
 fetch(reqGeoUrl)
   .then(response =>response.json())
   .then(data =>{
